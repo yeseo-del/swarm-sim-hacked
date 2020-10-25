@@ -68,7 +68,7 @@ describe 'Service: upgrade', ->
     expect(stats2.prod.toNumber()).toBe 1
 
   it 'buys/calcs max upgrades', ->
-    game = mkgame {territory:9}
+    game = mkgame {territory:1}
     upgrade = game.upgrade 'expansion'
     expect(upgrade.maxCostMet().toNumber()).toBe 0
     game.unit('territory')._setCount 10
@@ -135,13 +135,13 @@ describe 'Service: upgrade', ->
     expect(upgrade.effect[0].output().toNumber()).toBe 100000
 
   it 'sums costs', ->
-    game = mkgame {territory:9}
+    game = mkgame {territory:1}
     upgrade = game.upgrade 'expansion'
     expect(_.map upgrade.sumCost(1), (cost) -> [cost.unit.name, cost.val.toNumber()]).toEqual [['territory',10]]
     expect(_.map upgrade.sumCost(3), (cost) -> [cost.unit.name, cost.val.toNumber()]).toEqual [['territory',94.525]]
 
   it 'notices newly available upgrades', ->
-    game = mkgame {territory:9}
+    game = mkgame {territory:1}
     upgrade = game.upgrade 'expansion'
     expect(upgrade.isNewlyUpgradable()).toBe false
     upgrade.watch false
@@ -170,7 +170,7 @@ describe 'Service: upgrade', ->
 
   xit 'doesnt notice invisible upgrades, even if we can afford them. https://github.com/erosson/swarm/issues/94', ->
     # disabled - this case isn't possible anymore
-    game = mkgame {nest:25000}
+    game = mkgame {nest:1}
     upgrade = game.upgrade 'nesttwin'
     expect(upgrade._lastUpgradeSeen).toEqual 0
     expect(upgrade.isNewlyUpgradable()).toBe false
@@ -314,7 +314,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.count().toNumber()).toBe 5
 
   it "won't buy more than maxlevel", ->
-    game = mkgame {meat:1e300, territory:1e300}
+    game = mkgame {meat:1, territory:1}
     upgrade = game.upgrade 'achievementbonus'
     expect(upgrade.type.maxlevel).toBe 5
 
@@ -339,7 +339,7 @@ describe 'Service: upgrade', ->
     expect(game.upgrade('dronetwin').isAutobuyable()).toBe true
 
   it "calculates asymptotic stats multiplicatively, not additively. #264", ->
-    game = mkgame {nexus:5, moth:1e1000, mutantnexus:1e1000}
+    game = mkgame {nexus:1, moth:1, mutantnexus:1}
     energyprod = game.unit('energy').velocity().toNumber()
     expect(energyprod).toBeGreaterThan 1.9
     expect(energyprod).toBeLessThan 2.1
