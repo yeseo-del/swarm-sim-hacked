@@ -34,7 +34,7 @@ describe 'Service: upgrade', ->
   # TODO why is this of all things disconnecting the test
   # ...because units have a cycle, and jasmine loops forever trying to print test failures with a cycle. D'oh.
   it 'buys upgrades', ->
-    game = mkgame {territory:999999999}
+    game = mkgame {territory:1}
     expect(upgrade = game.upgrade 'expansion').toBe game.unit('invisiblehatchery').upgrades.byName['expansion']
     expect(upgrade.count().toNumber()).toBe 0
     upgrade.buy()
@@ -48,7 +48,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.count().toNumber()).toBe 0
 
   it 'calcs upgrade stats, no unit', ->
-    game = mkgame {drone:99999999999999}
+    game = mkgame {drone:1}
     upgrade = game.upgrade 'droneprod'
     upgrade2 = game.upgrade 'queenprod'
     stats = {}
@@ -68,7 +68,7 @@ describe 'Service: upgrade', ->
     expect(stats2.prod.toNumber()).toBe 1
 
   it 'buys/calcs max upgrades', ->
-    game = mkgame {territory:9}
+    game = mkgame {territory:1}
     upgrade = game.upgrade 'expansion'
     expect(upgrade.maxCostMet().toNumber()).toBe 0
     game.unit('territory')._setCount 10
@@ -82,7 +82,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.count().toNumber()).toBe 5
 
   it 'clones larvae', ->
-    game = mkgame {energy:9999999999999999999, larva:1000, invisiblehatchery:1, nexus:999}
+    game = mkgame {energy:1, larva:1, invisiblehatchery:1, nexus:1}
     upgrade = game.upgrade 'clonelarvae'
     unit = game.unit 'larva'
     expect(upgrade.effect[0].bank().toNumber()).toBe 1000
@@ -94,7 +94,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.effect[0].output().toNumber()).toBe 8000
 
   it 'buy more than max', ->
-    game = mkgame {territory:10}
+    game = mkgame {territory:1}
     upgrade = game.upgrade 'expansion'
     expect(upgrade.maxCostMet().toNumber()).toBe 1
     expect(upgrade.count().toNumber()).toBe 0
@@ -103,7 +103,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.count().toNumber()).toBe 1
 
   it 'clones cocoons', ->
-    game = mkgame {energy:1000000000000000000000000000000000000000, cocoon: 100, larva: 10, invisiblehatchery:1, nexus:999}
+    game = mkgame {energy:1, cocoon: 1, larva: 1, invisiblehatchery:1, nexus:1}
     cocoon = game.unit 'cocoon'
     larva = game.unit 'larva'
     upgrade = game.upgrade 'clonelarvae'
@@ -117,7 +117,7 @@ describe 'Service: upgrade', ->
     expect(larva.count().toNumber()).toBe 120 # 0 base larvae + 100 cloned cocoons + 10 cloned larvae + 10 starting larvae
 
   it 'caps clones', ->
-    game = mkgame {energy:1000000000000000000000000000000000000000, cocoon: 60000, larva: 70000, invisiblehatchery:1, nexus:999}
+    game = mkgame {energy:1, cocoon: 1, larva: 1, invisiblehatchery:1, nexus:1}
     cocoon = game.unit 'cocoon'
     larva = game.unit 'larva'
     upgrade = game.upgrade 'clonelarvae'
@@ -135,13 +135,13 @@ describe 'Service: upgrade', ->
     expect(upgrade.effect[0].output().toNumber()).toBe 100000
 
   it 'sums costs', ->
-    game = mkgame {territory:9}
+    game = mkgame {territory:1}
     upgrade = game.upgrade 'expansion'
     expect(_.map upgrade.sumCost(1), (cost) -> [cost.unit.name, cost.val.toNumber()]).toEqual [['territory',10]]
     expect(_.map upgrade.sumCost(3), (cost) -> [cost.unit.name, cost.val.toNumber()]).toEqual [['territory',94.525]]
 
   it 'notices newly available upgrades', ->
-    game = mkgame {territory:9}
+    game = mkgame {territory:1}
     upgrade = game.upgrade 'expansion'
     expect(upgrade.isNewlyUpgradable()).toBe false
     upgrade.watch false
@@ -170,7 +170,7 @@ describe 'Service: upgrade', ->
 
   xit 'doesnt notice invisible upgrades, even if we can afford them. https://github.com/erosson/swarm/issues/94', ->
     # disabled - this case isn't possible anymore
-    game = mkgame {nest:25000}
+    game = mkgame {nest:1}
     upgrade = game.upgrade 'nesttwin'
     expect(upgrade._lastUpgradeSeen).toEqual 0
     expect(upgrade.isNewlyUpgradable()).toBe false
@@ -196,7 +196,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.isCostMet()).toEqual true
 
   it 'rushes meat', ->
-    game = mkgame {energy:9999999999999999999, nexus:999, invisiblehatchery:1, drone:1, stinger:1}
+    game = mkgame {energy:1, nexus:1, invisiblehatchery:1, drone:1, stinger:1}
     upgrade = game.upgrade 'meatrush'
     unit = game.unit 'meat'
     expect(upgrade.effect[0].output().toNumber()).toBe 1 * 7200
@@ -208,7 +208,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.effect[1].output().toNumber()).toBe 100000000000
 
   it 'rushes territory', ->
-    game = mkgame {energy:9999999999999999999, nexus:999, invisiblehatchery:1, drone:1, swarmling:1}
+    game = mkgame {energy:1, nexus:1, invisiblehatchery:1, drone:1, swarmling:1}
     upgrade = game.upgrade 'territoryrush'
     unit = game.unit 'territory'
     expect(504).toBe new Decimal(0.07).times(7200).toNumber() #stupid floating-point precision
@@ -221,7 +221,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.effect[1].output().toNumber()).toBe 1000000000
 
   it 'rushes larvae', ->
-    game = mkgame {energy:9999999999999999999, nexus:999, invisiblehatchery:1, drone:1, swarmling:1}
+    game = mkgame {energy:1, nexus:1, invisiblehatchery:1, drone:1, swarmling:1}
     upgrade = game.upgrade 'larvarush'
     unit = game.unit 'larva'
     expect(upgrade.effect[0].output().toNumber()).toBe 2400
@@ -233,7 +233,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.effect[1].output().toNumber()).toBe 100000
 
   it 'randomly spawns premutagen when buying hatcheries', ->
-    game = mkgame {meat:9e+100, premutagen:0}
+    game = mkgame {meat:1, premutagen:0}
     hatchery = game.upgrade 'hatchery'
     effect = hatchery.effect[1] # mutagen-spawner effect
     premutagen = game.unit 'premutagen'
@@ -253,7 +253,7 @@ describe 'Service: upgrade', ->
     expect(premutagen.count().toNumber()).not.toBeLessThan 7000
 
   it 'randomly spawns premutagen when buying expansions', ->
-    game = mkgame {territory:9e+999, premutagen:0}
+    game = mkgame {territory:1, premutagen:0}
     hatchery = game.upgrade 'expansion'
     effect = hatchery.effect[1] # mutagen-spawner effect
     premutagen = game.unit 'premutagen'
@@ -273,7 +273,7 @@ describe 'Service: upgrade', ->
     expect(premutagen.count().toNumber()).not.toBeLessThan 7000
 
   it 'rolls different mutagen values after ascending; mutagen spawns depend on date', ->
-    game = mkgame {invisiblehatchery:1, meat:1e100}
+    game = mkgame {invisiblehatchery:1, meat:1}
     expect(game.session.state.date.restarted.getTime()).toBe 0
     premutagen = game.unit 'premutagen'
     game.upgrade('hatchery').buy 80
@@ -297,7 +297,7 @@ describe 'Service: upgrade', ->
     expect(precount.toNumber()).toBe premutagen.count().toNumber()
 
   it 'swarmwarps without changing energy', ->
-    game = mkgame {energy:50000, nexus:999, invisiblehatchery:1, drone:1, meat:0}
+    game = mkgame {energy:1, nexus:1, invisiblehatchery:1, drone:1, meat:0}
     upgrade = game.upgrade 'swarmwarp'
     energy = game.unit 'energy'
     expect(energy.count().toNumber()).toBe 50000
@@ -314,7 +314,7 @@ describe 'Service: upgrade', ->
     expect(upgrade.count().toNumber()).toBe 5
 
   it "won't buy more than maxlevel", ->
-    game = mkgame {meat:1e300, territory:1e300}
+    game = mkgame {meat:1, territory:1}
     upgrade = game.upgrade 'achievementbonus'
     expect(upgrade.type.maxlevel).toBe 5
 
@@ -339,7 +339,7 @@ describe 'Service: upgrade', ->
     expect(game.upgrade('dronetwin').isAutobuyable()).toBe true
 
   it "calculates asymptotic stats multiplicatively, not additively. #264", ->
-    game = mkgame {nexus:5, moth:1e1000, mutantnexus:1e1000}
+    game = mkgame {nexus:1, moth:1, mutantnexus:1}
     energyprod = game.unit('energy').velocity().toNumber()
     expect(energyprod).toBeGreaterThan 1.9
     expect(energyprod).toBeLessThan 2.1
